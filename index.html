@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>typeahead.js – examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="http://twitter.com/favicons/favicon.ico">
+
+    <link rel="stylesheet" href="https://twitter.github.io/typeahead.js/css/examples.css">
+</head>
+<body>
+
+
+<div id="the-basics">
+    <input class="typeahead" type="text" placeholder="States of USA">
+</div>
+
+
+<div id="remote2">
+    <input class="typeahead" type="text" placeholder="Product name">
+</div>
+
+<script>
+
+    // Enter a client ID for a web application from the Google Developer Console.
+    // The provided clientId will only work if the sample is run directly from
+    // https://google-api-javascript-client.googlecode.com/hg/samples/rpcRequestBody.html
+    // In your Developer Console project, add a JavaScript origin that corresponds to the domain
+    // where you will be running the script.
+    var apiKey = '';
+    var clientId = '';
+
+
+    var scopes = 'https://www.googleapis.com/auth/bigquery';
+    var resource = {
+        "query": "SELECT name FROM `isentropic-tape-184800.sammy_test1.products` WHERE STARTS_WITH(name, 'Du')",
+        "defaultDataset": {
+            "datasetId": "sammy_test1",
+            "projectId": "isentropic-tape-184800"
+        },
+        "maxResults": 10,
+        "useLegacySql": false,
+        "dryRun": false,
+        "kind": "bigquery#queryRequest"
+
+    };
+    function handleClientLoad() {
+        gapi.load('client', initClient);
+    }
+
+    function initClient() {
+        gapi.client.init({
+            apiKey: apiKey,
+            clientId: clientId,
+            scope: scopes
+        }).then();
+    }
+
+    function signIn() {
+        gapi.auth2.getAuthInstance().signIn();
+    }
+
+    function makeRequest() {
+        gapi.client.request({
+            'path': 'https://www.googleapis.com/bigquery/v2/projects/isentropic-tape-184800/queries',
+            'method': 'POST',
+            'body': resource
+        }).then(function(resp) {
+            writeResponse(resp.result);
+        });
+    }
+
+    function writeResponse(response) {
+        console.log(response);
+        itemList =[];
+        response.rows.forEach(function(val) {console.log(val.f[0].v); itemList.push(console.log(val.f[0].v));  });
+
+    }
+</script>
+
+
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};handleClientLoad();"
+        onreadystatechange="if (this.readyState === 'complete') this.onload();">
+</script>
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
+<script src="https://twitter.github.io/typeahead.js/js/jquery-1.10.2.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<!-- Typeahead.js Bundle -->
+<script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+<!--<script src ="https://twitter.github.io/typeahead.js/js/examples.js"></script>-->
+<script src="the-basics.js"></script>
+<!--
+<script src="../js/handlebars.js"></script>
+<script src="../js/jquery-1.10.2.min.js"></script>
+<script src="../releases/latest/typeahead.bundle.js"></script>
+<script src="../js/examples.js"></script>
+-->
+</body>
+</html>
